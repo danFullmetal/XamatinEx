@@ -42,7 +42,7 @@ namespace ListViewExample
 			//client.Authenticator = new SimpleAuthenticator ("","","","");
 			//id, Name, Message, test
 
-			Resupuest	a resp = deserial.Deserialize<Resupuesta> (response);
+			//Resupuest a resp = deserial.Deserialize<Resupuesta> (response);
 		
 
 			base.LoadView ();
