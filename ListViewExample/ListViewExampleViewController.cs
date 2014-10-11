@@ -40,7 +40,7 @@ namespace ListViewExample
 			//IRestResponse response = client.Execute (request);
 			var content = response.Content;
 			//client.Authenticator = new SimpleAuthenticator ("","","","");
-			//id, Name, Message, test
+			//id, Name, Message, test, another
 
 			//Resupuest a resp = deserial.Deserialize<Resupuesta> (response);
 		
