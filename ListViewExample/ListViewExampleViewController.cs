@@ -50,11 +50,10 @@ namespace ListViewExample
 			RestSharp.Deserializers.JsonDeserializer deserial = new JsonDeserializer ();
 
 			//Single variable
-			jsonObj = deserial.Deserialize<List<string>> (response);
+			jsonObj = deserial.Deserialize<List<Respuesta>> (response);
 
-			Console.WriteLine ("Name: {0}", jsonObj[0]);
-			for (int i = 0; i < jsonObj.Capacity - 2; i++) {
-				Console.WriteLine ("Name: {0}", jsonObj[i]);
+			for (int i = 0; i < jsonObj.Count; i++) {
+				Console.WriteLine ("Name: {0}", jsonObj[i].Name);
 			}
 
 			base.LoadView ();
