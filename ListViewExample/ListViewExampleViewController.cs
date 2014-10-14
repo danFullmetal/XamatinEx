@@ -9,9 +9,16 @@ using RestSharp.Deserializers;
 
 namespace ListViewExample
 {
+	public class Respuesta{
+		public string Name { get; set;}
+	}
+
 	public partial class ListViewExampleViewController : UIViewController 
 	{
 		List<string> ListaDatos = new List<string>();
+
+		public List<Respuesta> jsonObj;
+
 		string[] tableItems = new string[] {"Vegetables","Fruits","Flower Buds","Legumes","Bulbs","Tubers","Meat","Fishes","Pasta","Candies"};
 
 		public ListViewExampleViewController (IntPtr handle) : base (handle)
@@ -28,37 +35,36 @@ namespace ListViewExample
 
 		public override void LoadView ()
 		{
-
+			// Create a new RestClient and RestRequest
 			var client = new RestClient ("http://bordadossantiago.com/getjson.php");
 			var request = new RestRequest ("resource/{Name}", Method.GET);
 
+			// ask for the response to be in JSON syntax
 			request.RequestFormat = DataFormat.Json;
+
+			//send the request to the web service and store the response when it comes back
 			var response = client.Execute (request);
+			// The next line of code will only run after the response has been received
+
+			// Create a new Deserializer to be able to parse the JSON object
 			RestSharp.Deserializers.JsonDeserializer deserial = new JsonDeserializer ();
 
-			//var JSONObj = deserial.Deserialize<Dictionary<string,string>> (response);
-			//IRestResponse response = client.Execute (request);
-			var content = response.Content;
-			//client.Authenticator = new SimpleAuthenticator ("","","","");
-			//id, Name, Message, test, another
+			//Single variable
+			jsonObj = deserial.Deserialize<List<string>> (response);
 
-			//Resupuest a resp = deserial.Deserialize<Resupuesta> (response);
-		
+			Console.WriteLine ("Name: {0}", jsonObj[0]);
+			for (int i = 0; i < jsonObj.Capacity - 2; i++) {
+				Console.WriteLine ("Name: {0}", jsonObj[i]);
+			}
 
 			base.LoadView ();
 			DataSource data = new DataSource (ListaDatos);
-			ListaDatos.InsertRange (0,tableItems);
+			ListaDatos.InsertRange (0, tableItems);
 			tvDato.Source = data;
 			tvDato.ReloadData ();
 			tvDato.ReloadInputViews ();
 
 
-		}
-
-		public class Resupuesta{
-			public string id { get; set;}
-			public string Name { get; set;}
-			public string Message { get; set;}
 		}
 
 		#region View lifecycle
@@ -109,7 +115,7 @@ namespace ListViewExample
 
 
 		}
-		#endregion
+	#endregion
 	}
 }
 
