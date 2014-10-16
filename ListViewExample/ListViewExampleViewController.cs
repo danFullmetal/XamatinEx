@@ -6,6 +6,8 @@ using UIKit;
 using System.Collections.Generic;
 using RestSharp.Serializers;
 using RestSharp.Deserializers;
+using FlyoutNavigation;
+using MonoTouch.Dialog;
 
 namespace ListViewExample
 {
@@ -35,6 +37,7 @@ namespace ListViewExample
 
 		public override void LoadView ()
 		{
+
 			// Create a new RestClient and RestRequest
 			var client = new RestClient ("http://bordadossantiago.com/getjson.php");
 			var request = new RestRequest ("resource/{Name}", Method.GET);
@@ -52,9 +55,17 @@ namespace ListViewExample
 			//Single variable
 			jsonObj = deserial.Deserialize<List<Respuesta>> (response);
 
+
 			for (int i = 0; i < jsonObj.Count; i++) {
 				Console.WriteLine ("Name: {0}", jsonObj[i].Name);
 			}
+			//foreach para sacar los valores y aniadirlos a la lista
+			foreach(Respuesta x in jsonObj){
+				Respuesta datos = new Respuesta ();
+				datos.Name = x.Name;
+				ListaDatos.Add (datos.Name);
+			}
+
 
 			base.LoadView ();
 			DataSource data = new DataSource (ListaDatos);
@@ -66,12 +77,19 @@ namespace ListViewExample
 
 		}
 
+
+
+		public class DatosDB{
+			public string Name { get; set;}
+		}
+			
+
 		#region View lifecycle
 
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-			
+
 			// Perform any additional setup after loading the view, typically from a nib.
 		}
 
