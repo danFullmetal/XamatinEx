@@ -37,7 +37,19 @@ namespace ListViewExample
 
 		public override void LoadView ()
 		{
+			GetData ();
 
+			base.LoadView ();
+			DataSource data = new DataSource (ListaDatos);
+			ListaDatos.InsertRange (0, tableItems);
+			tvDato.Source = data;
+			tvDato.ReloadData ();
+			tvDato.ReloadInputViews ();
+
+
+		}
+
+		public void GetData(){
 			// Create a new RestClient and RestRequest
 			var client = new RestClient ("http://bordadossantiago.com/getjson.php");
 			var request = new RestRequest ("resource/{Name}", Method.GET);
@@ -55,10 +67,11 @@ namespace ListViewExample
 			//Single variable
 			jsonObj = deserial.Deserialize<List<Respuesta>> (response);
 
-
+			/*
 			for (int i = 0; i < jsonObj.Count; i++) {
 				Console.WriteLine ("Name: {0}", jsonObj[i].Name);
-			}
+			}*/
+
 			//foreach para sacar los valores y aniadirlos a la lista
 			foreach(Respuesta x in jsonObj){
 				Respuesta datos = new Respuesta ();
@@ -66,21 +79,6 @@ namespace ListViewExample
 				ListaDatos.Add (datos.Name);
 			}
 
-
-			base.LoadView ();
-			DataSource data = new DataSource (ListaDatos);
-			ListaDatos.InsertRange (0, tableItems);
-			tvDato.Source = data;
-			tvDato.ReloadData ();
-			tvDato.ReloadInputViews ();
-
-
-		}
-
-
-
-		public class DatosDB{
-			public string Name { get; set;}
 		}
 			
 
@@ -112,7 +110,18 @@ namespace ListViewExample
 		{
 			base.ViewDidDisappear (animated);
 		}
-			
+
+		partial void btnRefresh_TouchUpInside (UIButton sender)
+		{
+			//boton apara refrescar los datos del web service
+			ListaDatos.Clear();
+			GetData();
+			DataSource data = new DataSource (ListaDatos);
+			ListaDatos.InsertRange (0, tableItems);
+			tvDato.Source = data;
+			tvDato.ReloadData ();
+			tvDato.ReloadInputViews ();
+		}			
 
 		partial void btnDato_TouchUpInside (UIButton sender)
 		{

@@ -20,6 +20,10 @@ namespace ListViewExample
 
 		[Outlet]
 		[GeneratedCode ("iOS Designer", "1.0")]
+		UIButton btnRefresh { get; set; }
+
+		[Outlet]
+		[GeneratedCode ("iOS Designer", "1.0")]
 		UITableView tvDato { get; set; }
 
 		[Outlet]
@@ -30,11 +34,19 @@ namespace ListViewExample
 		[GeneratedCode ("iOS Designer", "1.0")]
 		partial void btnDato_TouchUpInside (UIButton sender);
 
+		[Action ("btnRefresh_TouchUpInside:")]
+		[GeneratedCode ("iOS Designer", "1.0")]
+		partial void btnRefresh_TouchUpInside (UIButton sender);
+
 		void ReleaseDesignerOutlets ()
 		{
 			if (btnDato != null) {
 				btnDato.Dispose ();
 				btnDato = null;
+			}
+			if (btnRefresh != null) {
+				btnRefresh.Dispose ();
+				btnRefresh = null;
 			}
 			if (tvDato != null) {
 				tvDato.Dispose ();
