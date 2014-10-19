@@ -116,6 +116,7 @@
       <DependentUpon>ListViewExampleViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="DataSource.cs" />
+    <Compile Include="reachability.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="MainStoryboard.storyboard" />

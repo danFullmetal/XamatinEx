@@ -6,22 +6,20 @@ using UIKit;
 using System.Collections.Generic;
 using RestSharp.Serializers;
 using RestSharp.Deserializers;
-using FlyoutNavigation;
 using MonoTouch.Dialog;
 
 namespace ListViewExample
 {
-	public class Respuesta{
-		public string Name { get; set;}
+	public class Respuesta
+	{
+		public string Name { get; set; }
 	}
 
-	public partial class ListViewExampleViewController : UIViewController 
+	public partial class ListViewExampleViewController : UIViewController
 	{
-		List<string> ListaDatos = new List<string>();
+		List<string> ListaDatos = new List<string> ();
 
 		public List<Respuesta> jsonObj;
-
-		string[] tableItems = new string[] {"Vegetables","Fruits","Flower Buds","Legumes","Bulbs","Tubers","Meat","Fishes","Pasta","Candies"};
 
 		public ListViewExampleViewController (IntPtr handle) : base (handle)
 		{
@@ -31,56 +29,62 @@ namespace ListViewExample
 		{
 			// Releases the view if it doesn't have a superview.
 			base.DidReceiveMemoryWarning ();
-			
+					
 			// Release any cached data, images, etc that aren't in use.
 		}
 
 		public override void LoadView ()
 		{
 			GetData ();
-
 			base.LoadView ();
 			DataSource data = new DataSource (ListaDatos);
-			ListaDatos.InsertRange (0, tableItems);
 			tvDato.Source = data;
 			tvDato.ReloadData ();
 			tvDato.ReloadInputViews ();
-
-
 		}
 
-		public void GetData(){
-			// Create a new RestClient and RestRequest
-			var client = new RestClient ("http://bordadossantiago.com/getjson.php");
-			var request = new RestRequest ("resource/{Name}", Method.GET);
+		public void GetData ()
+		{
+			if (!Reachability.IsHostReachable ("www.bordadossantiago.com")) {
+				var alert = new UIAlertView {
+					Title = "Unable to connect to server", 
+					Message = "Verify network connections"
+				};
+				alert.AddButton ("OK");
+				// last button added is the 'cancel' button (index of '2')
+				alert.Clicked += delegate(object a, UIButtonEventArgs b) {
+					Console.WriteLine ("Button " + b.ButtonIndex.ToString () + " clicked");
+				};
+				alert.Show ();
+			} else {
+				// Create a new RestClient and RestRequest
+				var client = new RestClient ("http://bordadossantiago.com/getjson.php");
+				var request = new RestRequest ("resource/{Name}", Method.GET);
 
-			// ask for the response to be in JSON syntax
-			request.RequestFormat = DataFormat.Json;
+				// ask for the response to be in JSON syntax
+				request.RequestFormat = DataFormat.Json;
 
-			//send the request to the web service and store the response when it comes back
-			var response = client.Execute (request);
-			// The next line of code will only run after the response has been received
+				//send the request to the web service and store the response when it comes back
+				var response = client.Execute (request);
+				// The next line of code will only run after the response has been received
 
-			// Create a new Deserializer to be able to parse the JSON object
-			RestSharp.Deserializers.JsonDeserializer deserial = new JsonDeserializer ();
+				// Create a new Deserializer to be able to parse the JSON object
+				RestSharp.Deserializers.JsonDeserializer deserial = new JsonDeserializer ();
 
-			//Single variable
-			jsonObj = deserial.Deserialize<List<Respuesta>> (response);
+				//Single variable
+				jsonObj = deserial.Deserialize<List<Respuesta>> (response);
 
-			/*
-			for (int i = 0; i < jsonObj.Count; i++) {
-				Console.WriteLine ("Name: {0}", jsonObj[i].Name);
-			}*/
+				Console.WriteLine (jsonObj.Count);
 
-			//foreach para sacar los valores y aniadirlos a la lista
-			foreach(Respuesta x in jsonObj){
-				Respuesta datos = new Respuesta ();
-				datos.Name = x.Name;
-				ListaDatos.Add (datos.Name);
+				//foreach para sacar los valores y aniadirlos a la lista
+				foreach (Respuesta x in jsonObj) {
+					Respuesta datos = new Respuesta ();
+					datos.Name = x.Name;
+					ListaDatos.Add (datos.Name);
+				}
 			}
-
 		}
-			
+
 
 		#region View lifecycle
 
@@ -114,21 +118,20 @@ namespace ListViewExample
 		partial void btnRefresh_TouchUpInside (UIButton sender)
 		{
 			//boton apara refrescar los datos del web service
-			ListaDatos.Clear();
-			GetData();
+			ListaDatos.Clear ();
+			GetData ();
 			DataSource data = new DataSource (ListaDatos);
-			ListaDatos.InsertRange (0, tableItems);
 			tvDato.Source = data;
 			tvDato.ReloadData ();
 			tvDato.ReloadInputViews ();
-		}			
+		}
 
 		partial void btnDato_TouchUpInside (UIButton sender)
 		{
 			if (string.IsNullOrEmpty (txtDato.Text)) {
-				UIAlertView _error = new UIAlertView ("Campo vacio", "El campo no puede estar vacio",null,"OK",null);
-				_error.Show();
-			}else{
+				UIAlertView _error = new UIAlertView ("Campo vacio", "El campo no puede estar vacio", null, "OK", null);
+				_error.Show ();
+			} else {
 				ListaDatos.Add (txtDato.Text);
 				DataSource data = new DataSource (ListaDatos);
 				tvDato.Source = data;
@@ -137,11 +140,8 @@ namespace ListViewExample
 				txtDato.Text = "";
 
 			}
-
-
-
 		}
-	#endregion
+		#endregion
 	}
 }
 
